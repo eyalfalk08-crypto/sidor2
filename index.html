@@ -744,7 +744,7 @@ function fw(s){
 }
 
 var _st=false,_bt=setInterval(function(){
-  if(_st||!db||!document.getElementById('ls'))return;
+ if(_st||!db||!authReady||!document.getElementById('ls'))return;
   _st=true;clearInterval(_bt);
   db.ref('sched/config').once('value').then(async function(sn){
     const c=sn.val()||{};
