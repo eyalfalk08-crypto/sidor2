@@ -713,7 +713,15 @@ const DEF_BS={allowMorning:true,allowEvening:true,allowNight:true,allowWeekend:t
 const SHF=[{k:'morning',l:'בוקר',cls:'sc-m',bk:'sb-m'},{k:'evening',l:'ערב',cls:'sc-e',bk:'sb-e'},{k:'night',l:'לילה',cls:'sc-n',bk:'sb-n'}];
 const DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 
-let db=null;try{firebase.initializeApp(firebaseConfig);db=firebase.database();}catch(e){}
+let db=null,authReady=false;
+try{
+  firebase.initializeApp(firebaseConfig);
+  db=firebase.database();
+  firebase.auth().onAuthStateChanged(user=>{
+    if(user){authReady=true;}
+    else{firebase.auth().signInAnonymously().catch(e=>console.error('Auth error:',e));}
+  });
+}catch(e){}
 let CU=null,CR=null,CW=null,_ps=null,_we=null,_bs=null,_wemps=[];
 
 async function fg(p){const s=await db.ref(p).once('value');return s.exists()?s.val():null;}
